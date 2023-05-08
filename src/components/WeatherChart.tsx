@@ -4,6 +4,7 @@ import {
   VictoryLine,
   VictoryAxis,
 } from "victory-native";
+import { D3Scale } from "victory-core";
 import moment from "moment";
 import { Svg, Circle, Line } from "react-native-svg";
 import { Dimensions } from "react-native";
@@ -102,13 +103,20 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ weatherData }) => {
   );
 };
 
-
-const NowIndicator = (props):JSX.Element => {
+type NowIndicatorProps = {
+  x: number;
+  y: number;
+  scale?: {
+    x: D3Scale;
+    y: D3Scale;
+  }
+};
+const NowIndicator: React.FC<NowIndicatorProps> = (props) => {
   // the x and y methods inside scale, scales the position on the chart to the pixels of canvas
-  const x = props.scale.x(props.x);
-  const y = props.scale.y(props.y);
-  const y0 = props.scale.y(0);
-  const x0 = props.scale.x(0);
+  const x = props.scale?.x(props.x);
+  const y = props.scale?.y(props.y);
+  const y0 = props.scale?.y(0);
+  const x0 = props.scale?.x(0);
   return (
     <Svg>
       <Line
@@ -132,7 +140,7 @@ const NowIndicator = (props):JSX.Element => {
         strokeDasharray={[5, 3]}
       />
       <Circle
-        cx={x + 1}
+        cx={x}
         cy={y}
         r={5.5}
         stroke={"#76B77A"}

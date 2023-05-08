@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { City, WeatherData } from "../types/dataTypes";
 import moment from "moment";
 import { getRequest } from "../api/getRequest";
@@ -26,45 +24,48 @@ type WeatherAPIParams = {
 type UseFetchWeatherReturnType = {
   weatherData: WeatherData | undefined;
   loading: boolean;
-}
+  hasError:boolean;
+};
 
-export const useFetchWeather = (city: City):UseFetchWeatherReturnType  => {
+export const useFetchWeather = (city: City): UseFetchWeatherReturnType => {
   const [weatherData, setWeatherData] = useState<WeatherData>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [hasError , setHasError] = useState<boolean>(false);
   const currentDate = moment().format(DATE_FORMAT);
-  
+
   const fetchData = async () => {
-    console.log('getting data for', city.name);
+    console.log("getting data for", city.name);
     try {
       const storedData = await retrieveFromCache(city.name);
       if (storedData) {
         setWeatherData(storedData);
         setLoading(false);
       } else {
-        const response = await getRequest<WeatherAPIResponse, WeatherAPIParams>({
-          url: TEMP_FORECAST_URL,
-          params: {
-            latitude: city.coordinates.latitude,
-            longitude: city.coordinates.longitude,
-            hourly: "temperature_2m",
-            start_date: currentDate,
-            end_date: currentDate,
-          },
-        });
+        const response = await getRequest<WeatherAPIResponse, WeatherAPIParams>(
+          {
+            url: TEMP_FORECAST_URL,
+            params: {
+              latitude: city.coordinates.latitude,
+              longitude: city.coordinates.longitude,
+              hourly: "temperature_2m",
+              start_date: currentDate,
+              end_date: currentDate,
+            },
+          }
+        );
         setWeatherData({
           temperatures: response.hourly.temperature_2m,
           times: response.hourly.time,
         });
-        putInCache(
-          city.name,{
-            temperatures: response.hourly.temperature_2m,
-            times: response.hourly.time,
-          }
-        );
+        putInCache(city.name, {
+          temperatures: response.hourly.temperature_2m,
+          times: response.hourly.time,
+        });
         setLoading(false);
       }
     } catch (error) {
       console.error(error);
+      setHasError(true);
       setLoading(false);
     }
   };
@@ -73,5 +74,5 @@ export const useFetchWeather = (city: City):UseFetchWeatherReturnType  => {
     fetchData();
   }, [city]);
 
-  return { weatherData, loading };
+  return { weatherData, loading , hasError };
 };
