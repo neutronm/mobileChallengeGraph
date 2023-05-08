@@ -1,48 +1,33 @@
-# Mobile Frontend Challenge
 
-## Interview process information
+# Veri Mobile Frontend Challenge Graph
 
-- Below is the task statement. Please read it carefully and reach out if you have any questions!
-- The recommended amount of time to spend is **around 4 hours**. Likely not everything can be done perfectly or at all so make sure to prioritize areas that showcase your skills.
-- You can spend the time in any way you want (1 burst, 1h/day, ...), no need to track exactly what you spent your time on.
-- We would expect you to do the task within 5-7 days - once you are done, please reach out (+send the created code/resources to us). If you need more time (holiday, etc.), let us know and we'll figure it out!
-
-## Task statement
-
-When developing the Veri app, we often need to visualize different data such as glucose data in a meaningful and easily understandable way. When there are a lot of data, it’s not always possible to calculate, fetch, store and render everything at once. One of the interesting question we face is: What is the optimal fetching and rendering strategy? We would like to minimise the loading times for the user and at the same time we would like to avoid fetching a lot of unnecessary information.
-
-This challenge focuses on fetching some data and visualizing it in graphs. You should make a demo app that visualizes temperature data from a free weather API [Open Meteo](https://open-meteo.com/). The app should visualize multiple cities’ hourly temperatures. The user should be able to swipe or scroll horizontally to switch the city. The swiping or scrolling interaction should feel responsive and smooth. 
-
-The app should also have partial offline support. So after inspecting some cities’ data, the user should be able to close the app, turn the internet connection off and open the app and inspect the same cities’ data again.
-
-The app could look something like this, but feel free to take creative liberty:
-
-![Design](./design.png)
+## Interesting features of my solution:
 
 
-## Specification
+### Modulatization
 
-- The app should be developed using React Native. **You can find the boilerplate project on Github at:** [https://github.com/HumanEngineering/mobileChallengeGraph](https://github.com/HumanEngineering/mobileChallengeGraph)
-- The app should use [Open Meteo](https://open-meteo.com/) weather API to fetch today's hourly temperature data for each city.
-    - See the endpoint: [https://open-meteo.com/en/docs#hourly=temperature_2m](https://open-meteo.com/en/docs#hourly=temperature_2m)
-- In the boilerplate project, there is a file called `src/cityCoordinates.json`. It contains all the cities for which you need to fetch and display today's temperature data.
-- The user should be able to scroll or swipe horizontally to switch the city. The swiping or scrolling interaction should feel responsive and smooth.
-- The app should have partial offline support. If a user looked ever at the temperature of a specific city, they should be able to see that temperature also later, after an app restart, possibly without internet connection.
+Have organized the code into seperate files for **components, screens, hooks, utils, types and constants.**
+I've followed a modular approach and had the **single-responsability principal** in mind for better code organization, maintainability, and readability.
 
-## **Tips and hints**
 
-- Feel free to use any 3rd party libraries. For example, we left the possible chart library choice open on purpose.
+### Chart component
 
-## **What we'll be looking for**
+Built a custom chart component, `WeatherChart`, using the **victory-native** library to display the weather data. the chart component has dynamic domain for better accuracy and includes a "now" indicator, which shows the current temperature for better chart readability and user experience.
 
-- Ability to explain your code.
-- Clean and reasonable technical and UX decisions and the ability to argue about them.
-- Ability to prioritise and recognise what is valuable - focus on those aspects of this task where you can showcase your skills.
+### Optimized list (Fetching and loading strategy)
+Added lazy loading to the flat list, so at first it loads 3 of the items and then loads 3 more. and after that with each scroll, loades the next item of the list.
 
-## **When you're done**
 
-- Email your Veri contact a Github project link or a zip file of the project.
-- The GitHub project or a zip should contain
-    - A brief demo video and/or a set of screenshots showcasing the app's functionality.
-    - Make sure to highlight particularly interesting features of your solution!
-- If you send us the project as zip, please **don't** include installed `node_modules` folder or any other files listed in `.gitignore`.
+### Caching strategy
+
+Implemented a caching strategy using **AsyncStorage** to store fetched data for each city. when retreiving, the data would be **validated** and if not valid, it would be removed from the storage as well as fetching the new data.
+
+### Custom hook
+Implemented a custom hook `useFetchWeather` to separate the logic of fetching and caching from the presentation layer.
+
+### Screenshots
+![Screenshot1](./screenshots/screenshot1.png)
+![Screenshot2](./screenshots/screenshot2.png)
+![Design](./screenshots/design.png)
+
+

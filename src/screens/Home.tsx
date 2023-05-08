@@ -1,10 +1,17 @@
 import React, { useEffect } from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native'
 import { WeatherList } from '../components/WeatherList';
+import { invalidateOldCaches } from '../utils/weatherDataCache';
+import moment from 'moment';
+import { DATE_FORMAT } from '../constants/constants';
 
 
-export const Home = ():JSX.Element => {
+export const Home: React.FC = () => {
     
+    useEffect(()=>{
+        invalidateOldCaches()
+    },[])
+
     return(
         <SafeAreaView style={styles.background}>
             <View style={styles.container}>

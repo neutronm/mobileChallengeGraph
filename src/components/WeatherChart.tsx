@@ -3,10 +3,7 @@ import {
   VictoryChart,
   VictoryLine,
   VictoryAxis,
-  LineSegment,
-  VictoryLabel,
 } from "victory-native";
-
 import moment from "moment";
 import { Svg, Circle, Line } from "react-native-svg";
 import { Dimensions } from "react-native";
@@ -24,7 +21,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ weatherData }) => {
   const minimumTemp = useRef<number>(0);
   const maximumTemp = useRef<number>(100);
   const nowIndex = useRef<number>(0);
-  const updateTimeInterval = useRef<ReturnType<typeof setInterval>>();
+
   useEffect(() => {
     setChartData(
       weatherData.temperatures.map((temp: number, index: number) => {
@@ -37,17 +34,11 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ weatherData }) => {
 
   useEffect(() => {
     //Todo: Timezone
-    // updates the now indicator every 15 minutes  1000 * 60 * 15
-    if(updateTimeInterval.current){
-      clearInterval(updateTimeInterval.current)
-    }
-    updateTimeInterval.current = setInterval(()=>{
-      nowIndex.current = weatherData.times.findIndex((time: string) => {
-        return moment(time).hour() === moment().hour();
-      });
-    }, 900000);
-    return () => clearInterval(updateTimeInterval.current)  
+    nowIndex.current = weatherData.times.findIndex((time: string) => {
+      return moment(time).hour() === moment().utc().hour();
+    });
   }, [weatherData]);
+
 
   return (
     <VictoryChart

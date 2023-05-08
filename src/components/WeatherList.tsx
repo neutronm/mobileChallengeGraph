@@ -5,7 +5,7 @@ import cityCoordinates from '../cityCoordinates.json';
 import { City } from '../types/dataTypes';
 
 
-export const WeatherList = ():JSX.Element => { 
+export const WeatherList: React.FC = () => { 
     const renderWeatherItem = useCallback(({item}:{item:City})=>{
         return <WeatherListItem cityData={item} />
     },[])
@@ -25,6 +25,7 @@ export const WeatherList = ():JSX.Element => {
       </View>
     )
 }
+
 const styles = StyleSheet.create({
    listContainer:{
      height:'50%',
