@@ -11,7 +11,7 @@ type WeatherListItemProps = {
 export const WeatherListItem: React.FC<WeatherListItemProps> = ({
   cityData,
 }) => {
-  const { weatherData, loading } = useFetchWeather(cityData);
+  const { weatherData, loading , hasError} = useFetchWeather(cityData);
 
   return (
     <View style={styles.background}>
@@ -19,8 +19,10 @@ export const WeatherListItem: React.FC<WeatherListItemProps> = ({
         <Text style={styles.title}>{cityData.name}</Text>
         {loading ? (
           <Text>loading...</Text>
-        ) : (
+        ) : weatherData && !hasError ? (
           <WeatherChart weatherData={weatherData} />
+        ):(
+          <Text>Could not get weather data</Text>
         )}
       </View>
     </View>
